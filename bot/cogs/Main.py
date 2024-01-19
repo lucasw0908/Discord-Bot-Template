@@ -1,8 +1,12 @@
 import discord
 from discord.ext import commands
+import logging
 
-from ..utils.help import Help, HelpCommandSettings, need_help
-from ..utils.emoji import EmojiManager
+from bot.config import LOGNAME
+from bot.utils.help import Help, HelpCommandSettings, need_help
+from bot.utils.emoji import EmojiManager
+
+log = logging.getLogger(f"{LOGNAME}.cogs.main")
 
 class Main(commands.Cog):
     def __init__(self, bot: commands.Bot):
@@ -19,11 +23,13 @@ class Main(commands.Cog):
         HelpCommandSettings.set_command_list(list(self.bot.all_commands.values()))
         self.bot.help_command = Help()
         
-        print(" * Discord bot : Started!")
+        log.info("Bot is on ready!")
         
     @commands.Cog.listener()
     async def on_command_error(self, ctx: discord.ApplicationContext, err: discord.ApplicationCommandError):
         await ctx.message.reply(embed=need_help(command_name=ctx.message.content, error=err), mention_author=False)
+        
+        log.error(f"{err}")
             
 def setup(bot: commands.Bot):
     bot.add_cog(Main(bot))

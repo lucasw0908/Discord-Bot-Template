@@ -49,8 +49,3 @@ class HelpCommandSettings:
                 embed.add_field(name="", value=f"**{prefix}{cmd.name}**\n _{description}_", inline=False)
             
         return embed
-
-class Help(commands.MinimalHelpCommand):
-    async def send_bot_help(self, mapping):
-        destination = self.get_destination()
-        await destination.send(embed=HelpCommandSettings.help())
